@@ -20,9 +20,6 @@
  * M개의 줄에 답을 출력한다. 존재하면 1을, 존재하지 않으면 0을 출력한다.
  * 
  * 
- * 
- * 
- * 
  * 문제 주요 point
  * 
  * 1초의 제한 시간을 만족하기위해 정렬 및 탐색에서 빠른 알고리즘을 이용해야 한다.
@@ -135,21 +132,14 @@ int main(){
         scanf("%d", &question[i]);
     }
 
-    //index 로 A_size 를 사용하는데 주의!
-    if(A_size==1){
-        for(int i=0;i<question_size;i++){
-            if(A[A_size-1] == question[i]) printf("%d\n", 1);
-            else printf("%d\n", 0);
-        }
+
+
+    mergeSort(A,0,A_size-1);
+    for(int i=0; i<question_size;i++){
+        if(binarySearch(A,0,A_size-1,question[i])==-1)  printf("%d\n", 0);
+        else printf("%d\n", 1);
     }
 
-    else{
-        mergeSort(A,0,A_size-1);
-        for(int i=0; i<question_size;i++){
-            if(binarySearch(A,0,A_size-1,question[i])==-1)  printf("%d\n", 0);
-            else printf("%d\n", 1);
-        }
-    }
 
     return 0;
 }

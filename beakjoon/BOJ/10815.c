@@ -143,20 +143,10 @@ int main(){
         scanf("%d", &question[i]);
     }
 
-    //index 로 A_size 를 사용하는데 주의!
-    if(A_size==1){
-        for(int i=0;i<question_size;i++){
-            if(A[A_size-1] == question[i]) printf("%d ", 1);
-            else printf("%d ", 0);
-        }
-    }
-
-    else{
-        mergeSort(A,0,A_size-1);
-        for(int i=0; i<question_size;i++){
-            if(binarySearch(A,0,A_size-1,question[i])==-1)  printf("%d ", 0);
-            else printf("%d ", 1);
-        }
+    mergeSort(A,0,A_size-1);
+    for(int i=0; i<question_size;i++){
+        if(binarySearch(A,0,A_size-1,question[i])==-1)  printf("%d ", 0);
+        else printf("%d ", 1);
     }
 
     return 0;

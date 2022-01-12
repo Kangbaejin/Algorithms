@@ -21,10 +21,6 @@ using namespace std;
 
 
 int lotto(vector<int> v){
-    ios_base::sync_with_stdio(0);
-    cin.tie(0);
-
-
     int size;
     size = v.size();
     
@@ -48,6 +44,9 @@ int lotto(vector<int> v){
 
 
 int main(){
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+
     while(1){
         int t,x;
         cin >> t;

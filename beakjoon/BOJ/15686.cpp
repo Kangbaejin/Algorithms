@@ -16,7 +16,7 @@
  * 모든 값을 배열에 저장하는 것이 아니라,
  * 집의 위치와 가게의 위치를 벡터에 저장하여 이용하자
  * 
- * 굳이 이중배열을 선언해서 넣을 필요 없이 각각 입력 받는 값을 이용해서 변수 처리 해보기
+ * 굳이 이중배열을 선언해서 넣을 필요 없이 각각 입력 받는 값을 이용해서 변수 처리
  * 
  */
 
@@ -57,11 +57,6 @@ int main(){
     int N, M;
     cin >> N >> M;
 
-    int **a = new int*[N];
-
-    for(int i=0; i<N; i++){
-        a[i] = new int[N];
-    }
 
     vector<pair<int, int>> house;
     vector<pair<int, int>> store;
@@ -70,7 +65,6 @@ int main(){
     for(int i=0; i<N; i++){
         for(int j=0; j<N; j++){
             cin >> x;
-            a[i][j] = x;
             if(x == 1)
                 house.push_back(make_pair(i,j));
             else if(x == 2)
@@ -80,13 +74,11 @@ int main(){
 
     if(store.size()==M){
         solve(house,store);
-        for(int i=0;i<N;i++)
-            delete [] a[i];
-        delete [] a;
     }
 
     else{
         vector<int> temp;
+        vector<pair<int,int>> temp_st;
         int st_size=store.size();
         for(int i=0;i<st_size;i++){
             if(i<M)
@@ -96,17 +88,16 @@ int main(){
         }
         
         do{
-            vector<pair<int,int>> temp_st(store);
+            temp_st.clear();
             for(int i=0;i<st_size;i++){
                 if(temp[i]==0)
-                    temp_st.erase(temp_st.begin()+i);
+                    continue;
+                else
+                    temp_st.push_back(store[i]);
             }
+
             solve(house,temp_st);
         }while(prev_permutation(temp.begin(),temp.end()));
-
-        for(int i=0;i<N;i++)
-            delete [] a[i];
-        delete [] a;
     }
 
     cout << min_legnth;

@@ -104,5 +104,24 @@ int main(){
     return 0;
 
 
-
 }
+
+
+
+/*
+ *
+ *
+ * 브루트 포스 탐색에서 prev_permuation 방법 이외에
+ * 이용할 수 있는 방법을 더 생각해보기
+ * 
+ * 
+ * 
+ * 예를 들면
+ * 
+ * https://www.acmicpc.net/source/37701408
+ * 
+ * rujang 님의 코드 중에서 
+ * void chicken_select(int k) 부분
+ * 
+ * https://rujang.tistory.com/category/%ED%95%98%EB%A3%A8%20%ED%95%9C%20%EB%AC%B8%EC%A0%9C
+ */

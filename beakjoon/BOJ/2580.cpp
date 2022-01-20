@@ -16,7 +16,7 @@ using namespace std;
 
 int all[9][9];
 vector<pair<int,int>> v;
-
+int check[10];
 bool *flag;
 int N;
 
@@ -34,7 +34,8 @@ void print_sudoku(){
 }
 
 void solve(int x, int y){
-    int check[10]={0,};
+    for(int i=0;i<9;i++)    check[i] = 0;
+
     for(int i=0;i<9;i++){
         check[all[i][y]]=1;
     }
@@ -49,8 +50,10 @@ void solve(int x, int y){
     }
 
     for(int i=1;i<=9;i++){
-        if(check[i]==0)
+        if(check[i]==0){
             all[x][y] = i;
+            return;
+        }
     }
 
     return;
@@ -61,6 +64,7 @@ void solve(int x, int y){
 
 void dfs(int depth){
     if(is_print)    return;
+    if(depth > N)   return;
     if(depth == N){
         print_sudoku();
         is_print = true;
@@ -88,6 +92,9 @@ int main(){
                 v.push_back({i,j});
         }
     }
+
+    cout << "\n";
+
 
     N = v.size();
     flag = new bool[N];

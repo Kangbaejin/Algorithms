@@ -15,9 +15,8 @@
 using namespace std;
 
 int all[9][9];
-vector<pair<int,int>> v;
+int check[10];
 int N;
-
 bool is_print = false;
 
 
@@ -29,76 +28,65 @@ void print_sudoku(){
         }
         cout << "\n";
     }
+
+    return;
 }
 
-bool solve(int x, int y){
-
-    for(int i=0;i<9;i++){
-        if(all[i][y]==all[x][y]){
-            if(i==x) continue;
-            else return false;
-        }
-    }
-    for(int i=0;i<9;i++){
-        if(all[x][i]==all[x][y]){
-            if(i==y) continue;
-            else return false;
-        }
-    }
-
-    for(int i=0;i<3;i++){
-        for(int j=0;j<3;j++){
-            if(all[(x/3)*3+i][(y/3)*3+j]==all[x][y]){
-                if((x/3)*3+i==x && (y/3)*3+j == y){
-                    continue;
-                }
-                else{
-                    return false;
-                }
-            }
-        }
-    }
-
-    return true;
-}
-
-
-
-
-void dfs(int depth){
-    if(is_print)    return;
-    if(depth == v.size()){
+void solve(int x, int y){
+    if(is_print) return;
+    else if(x==9 && y == 0){
         print_sudoku();
         is_print = true;
         return;
     }
+    else if(all[x][y]!=0){
+        if(y<8) solve(x,y+1);
+        else solve(x+1,0);
 
-    int x = v[depth].first;
-    int y = v[depth].second;
-
-    for(int i=1;i<=9;i++){
-        all[x][y] = i;
-        if(solve(x,y))
-            dfs(depth+1);
+        return;
     }
 
-    all[x][y]=0;
+    else{
+        for(int k=1;k<=9;k++){
+
+            for(int i=0;i<=9;i++)    check[i] = 0;
+
+            for(int i=0;i<9;i++){
+                check[all[i][y]]=1;
+            }
+            for(int i=0;i<9;i++){
+                check[all[x][i]]=1;
+            }
+
+            for(int i=0;i<3;i++){
+                for(int j=0;j<3;j++){
+                    check[all[(x/3)*3+i][(y/3)*3+j]]=1;
+                }
+            }
+
+            if(check[k]==0){
+                all[x][y] = k;
+                if(y<8) solve(x,y+1);
+                else solve(x+1,0);
+                all[x][y] = 0;
+            }
+        }
+    }
+
 
     return;
 }
+
 
 
 int main(){
     for(int i=0;i<9;i++){
         for(int j=0;j<9;j++){
             cin >> all[i][j];
-            if(all[i][j]==0)
-                v.push_back({i,j});
         }
     }
 
-
-    dfs(0);
+    solve(0,0);
 
     return 0;
 }

@@ -8,63 +8,31 @@
  * 
  */
 
-
-
-
-
 /* 
- * 일단 수의 범위가 너무 큰 것에서 이를 간단히 실행 할 수 있는 방법을
- * 고민하던 중, 입력의 sqrt 값을 이용하여 sqrt_max 이하의 소수들의 배수들의 위치에
- * 마킹을 하여, 마킹되지 않은 수를 구하는 알고리즘을 떠올렸다.
+ * long long 변수형을 사용하여 큰 수를 처리했고,
+ * 배열의 크기를 위해 max - min 의 최대값은 1000000 값으로 주어졌다.
+ * 이때 큰 수를 조건에 맞게 index를 설정하는 것이 포인트
  * 
- * ex) 1 10  일때 1, 2, 3, 4, 5, 6, 7, 8, 9, 10
- * sqrt min = 1, sqrt max = 3.xxx
- * 따라서 해당 수 사이에 있는 최대 가능 소수의 제곱은, 4와 9 이다.
- * 제곱수로 나누어지는 경우는 4의 배수 경우인 4와 8,
- * 9의 배수인 9로
+ * 소수 판정 후 소수만을 이용하는 알고리즘을 떠올렸었는데,
+ * 굳이 소수를 뽑아내고 소수의 제곱수의 배수마다 체크하는 것 보다
  * 
- * 해당 경우를 제외한 1,2,3,5,6,7,10 이므로 답은 7
- * 
+ * 최대값 까지의 제곱수들을 이용하여 최소값을 나누었을 때
+ * 조건식을 두어 첫 index를 잘 설정한 뒤 1000000 개 안의 배열에서
+ * 반복문을 통해 체크하며 개수를 반환하는 문제
  * 
  * 
- * mintomax 라는 배열에 min 부터 max 까지의 값을 넣고,
- * 이후 소수^2 의 값으로 나눌 수 있다면 0으로 표시한다.
- * 
- * 마지막으로 mintomax의 값이 0이 아닌 것의 갯수가 제곱 ㄴㄴ 수의 갯수이다.
+ * 소수를 이용한 알고리즘을 떠올리기 전에, 제일 먼저 떠올렸던 알고리즘이 위와 같았는데,
+ * 첫 index 에 대한 문제 때문에 계속 막막했었다.
+ * https://www.acmicpc.net/board/view/65584
+ * 이 분의 코드엔 막연하게 생각했던 부분들이 체계적으로 잘 구현이 되어 있었다...
  * 
  */
 
 #include <iostream>
-#include <cmath>
-#include <vector>
 using namespace std;
 
 
-bool primes[1000001];
-vector<int> v;
-long long mintomax[1000001]={0,};
-
-void eratosthenes(int start, int n){
-    if(n<=1)    return;
-
-    for(int i=2; i<=n; i++)
-        primes[i] = true;
-
-    for(int i=2; i*i<=n; i++){
-        if(primes[i])
-            for(int j=i*i; j<=n; j+=i)
-                primes[j] = false;
-    }
-
-    for(int i=start; i<=n; i++){
-        if(primes[i])
-            v.push_back(i*i);
-    }
-    return;
-}
-
-
-
+bool mintomax[1000001];
 
 
 int main(){
@@ -78,35 +46,29 @@ int main(){
     cin >> min >> max;
     long long gap = max - min;
 
-
-    
-
     for(int i=0;i<=gap;i++){
-        mintomax[i] = min + i;
+        mintomax[i] = true;
     }
 
-    int sqrt_min, sqrt_max;
-    sqrt_min = (int)sqrt(min);
-    sqrt_max = (int)sqrt(max);
+    long long temp, square_min;
+    for(long long i=2; i*i<=max; i++){
+        temp = i*i;
+        //나누어 떨어지지 않으면, 다음 배수부터 시작하기 위한 조건문
+        if(min%temp==0) square_min = min;
+        else square_min = (min/temp + 1)*temp;
 
-    eratosthenes(1,sqrt_max);
-
-
-    for(int i=0;i<=gap;i++){
-        for(int j=0;j<v.size();j++){
-            if(mintomax[i]%v[j]==0)
-                mintomax[i]=0;
+        for(long long j = square_min; j<=max; j+=temp){
+            mintomax[j-min] = false;
         }
     }
 
 
     int count = 0;
     for(int i=0;i<=gap;i++){
-        if(mintomax[i]!=0)
-            count ++;
+        if(mintomax[i]) count ++;
     }
 
-    cout <<count;
+    cout << count;
 
 
     return 0;

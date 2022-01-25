@@ -27,18 +27,12 @@
  * 
  * 
  * 
- * 아래의 코드는 완벽하지 않으며,
- * 1 10 경우 :  출력 7 (정답 = 7)
- * 15 15 경우 : 출력 0 (정답 = 1)
- * 1 1000 경우 : 출력 609 (정답 = 608)
+ * mintomax 라는 배열에 min 부터 max 까지의 값을 넣고,
+ * 이후 소수^2 의 값으로 나눌 수 있다면 0으로 표시한다.
  * 
- * 두 수 사이의 gap 을 이용함에 있어서 시작 위치를 정하는 것에서 문제가 있다.
+ * 마지막으로 mintomax의 값이 0이 아닌 것의 갯수가 제곱 ㄴㄴ 수의 갯수이다.
  * 
  */
-
-
-
-
 
 #include <iostream>
 #include <cmath>
@@ -48,6 +42,7 @@ using namespace std;
 
 bool primes[1000001];
 vector<int> v;
+long long mintomax[1000001]={0,};
 
 void eratosthenes(int start, int n){
     if(n<=1)    return;
@@ -85,34 +80,33 @@ int main(){
 
 
     
-    bool mintomax[1000001]={false,};
+
+    for(int i=0;i<=gap;i++){
+        mintomax[i] = min + i;
+    }
 
     int sqrt_min, sqrt_max;
     sqrt_min = (int)sqrt(min);
     sqrt_max = (int)sqrt(max);
 
     eratosthenes(1,sqrt_max);
-    
-    for(int i=0;i<v.size();i++){
-        cout << v[i] << " ";
-    }
 
 
-    for(int i=0;i<v.size();i++){
-        int temp = v[i];
-        while(temp<gap){
-            mintomax[temp] = true;
-            temp += v[i];
+    for(int i=0;i<=gap;i++){
+        for(int j=0;j<v.size();j++){
+            if(mintomax[i]%v[j]==0)
+                mintomax[i]=0;
         }
     }
 
+
     int count = 0;
-    for(int i=0;i<gap;i++){
-        if(!mintomax[i])
+    for(int i=0;i<=gap;i++){
+        if(mintomax[i]!=0)
             count ++;
     }
 
-    cout << "\n" <<count;
+    cout <<count;
 
 
     return 0;

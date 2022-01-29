@@ -9,26 +9,38 @@
  */
 
 #include <iostream>
+#include <queue>
 #include <vector>
-#include <algorithm>
 
 using namespace std;
 
+#define MAX 100001
+
+
+vector<bool> visited(MAX, false);
 int ans;
-int x, y;
+int N, K;
 
 void solve(int n, int depth){
-    cout << "depth : " << depth << " n : " << n << '\n';
-    if(n<0)  return;
-    if(depth>y-x)  return;
-    else if(n==y){
-        if(depth<ans) ans = depth;
-        return;
-    }
-    else{
-        solve(n-1,depth+1);
-        solve(n+1,depth+1);
-        solve(n*2,depth+1);
+    queue<pair<int, int>> q;
+    q.push({n, depth});
+    while(!q.empty()){
+        n = q.front().first;
+        depth = q.front().second;
+        q.pop();
+        if(n == K){
+            cout << depth;
+            return;
+        }
+        else if(!visited[n]){
+            visited[n]=true;
+            if(n*2 < MAX && n < K)
+                q.push({n*2, depth+1});
+            if(n < K)
+                q.push({n+1, depth+1});
+            if(n > 0)
+                q.push({n-1, depth+1});
+        }
     }
 
 }
@@ -39,10 +51,8 @@ int main(){
     cin.tie(0);
 
 
-    cin >> x >> y;
-    ans = (y-x)>=0 ? y-x : x-y;
-    solve(x,0);
-    cout << ans;
+    cin >> N >> K;
+    solve(N,0);
 
     return 0;
 }

@@ -1,7 +1,7 @@
 /* 
  * baekjoon 2667
  * 
- * 숨바꼭질
+ * 단지 번호 붙이기
  * 
  * https://www.acmicpc.net/problem/2667
  * 
@@ -9,41 +9,35 @@
  */
 
 #include <iostream>
-#include <queue>
 #include <vector>
+#include <algorithm>
 
 using namespace std;
 
-#define MAX 100001
+int N,cnt;
+string mat[25];
+int dx[4] = {-1,0,1,0};
+int dy[4] = {0,-1,0,1};
 
+vector<int> ans;
 
-vector<bool> visited(MAX, false);
-int ans;
-int N, K;
+bool visited[25][25]={false,};
 
-void solve(int n, int depth){
-    queue<pair<int, int>> q;
-    q.push({n, depth});
-    while(!q.empty()){
-        n = q.front().first;
-        depth = q.front().second;
-        q.pop();
-        if(n == K){
-            cout << depth;
-            return;
-        }
-        else if(!visited[n]){
-            visited[n]=true;
-            if(n*2 < MAX && n < K)
-                q.push({n*2, depth+1});
-            if(n < K)
-                q.push({n+1, depth+1});
-            if(n > 0)
-                q.push({n-1, depth+1});
+void dfs(int x, int y){
+    visited[x][y] = true;
+    cnt++;
+    for(int i=0;i<4;i++){
+        int newX = x + dx[i];
+        int newY = y + dy[i];
+
+        if((0<=newX && newX < N) && (0 <=newY && newY < N)){
+            if(mat[newX][newY]=='1' && !visited[newX][newY]){
+                dfs(newX, newY);
+            }
         }
     }
-
 }
+
 
 
 int main(){
@@ -51,8 +45,24 @@ int main(){
     cin.tie(0);
 
 
-    cin >> N >> K;
-    solve(N,0);
+    cin >> N;
+    for(int i=0;i<N;i++) cin >> mat[i];
+    
+    for(int i=0;i<N;i++){
+        for(int j=0;j<N;j++){
+            if(mat[i][j]=='1' && !visited[i][j]){
+                cnt = 0;
+                dfs(i,j);
+                ans.push_back(cnt);
+            }
+        }
+    }
+    sort(ans.begin(),ans.end());
 
+    cout << ans.size() << '\n';
+    for(int i=0;i<ans.size();i++){
+        cout << ans[i] << '\n';
+    }
+    
     return 0;
 }

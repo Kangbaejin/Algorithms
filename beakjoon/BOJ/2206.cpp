@@ -12,55 +12,52 @@
 #include <queue>
 
 #define MAX 1001
-#define mini(a,b) (a<b ? a : b)
+
 using namespace std;
 
 int value[MAX][MAX] = {0,};
-int result[MAX][MAX] = {100000,};
+int result[MAX][MAX][2] = {0,};
 int dir[4][2] = {{1,0},{-1,0},{0,1},{0,-1}};
-
-vector<pair<int, int>> v;
 
 int N,M;
 
 
-int bfs(int sy, int sx){
-	queue<pair<int, int> > q;
-	q.push(make_pair(sy,sx));
-	value[sy][sx]=2;
+int bfs(void){
+	queue<pair<pair<int, int>, int> > q;
+
+	q.push({{0,0},1});
+	result[0][0][1]=1;
 	while(!q.empty()){
-		int y = q.front().first, x = q.front().second;
+        int x = q.front().first.first;
+		int y = q.front().first.second;
+        int block = q.front().second;
 		q.pop();
+
+        if(x == N-1 && y == M-1)
+            return result[x][y][block];
+
 		for(int i=0; i<4; i++){
-			int newY= y + dir[i][0], newX= x+ dir[i][1];
-			if(newY<0 || newY>=N || newX<0 || newX>=M) continue;
-			if(value[newY][newX]==0){
-				result[newY][newX]=result[y][x]+1;
-				q.push(make_pair(newY,newX));
+            int newX = x + dir[i][0];
+			int newY = y + dir[i][1];
+            //배열 벗어나면 continue 처리
+			if(newX<0 || newX>=N || newY<0 || newY>=M) continue;
+
+            //벽이 있으며, 아직 벽을 뚫지 않았으면
+            if(value[newX][newY] == 1 && block == 1){
+                result[newX][newY][block-1] = result[x][y][block] + 1;
+                q.push({{newX,newY},block-1});
+            }
+            //벽이 없는 경우
+			else if(value[newX][newY]==0 && result[newX][newY][block]== 0){
+				result[newX][newY][block]=result[x][y][block]+1;
+				q.push({{newX,newY}, block});
 			}
 		}
 	}
-	return result[N-1][M-1]-1;
+	return -1;
 }
 
 
-int solve(){
-    for(int x=0;x<N;x++){
-        for(int y=0;y<M;y++){
-            if(value[x][y]==0){
-                for(int i=0; i<4; i++){
-                    int newX = x + dir[i][1], newY = y + dir[i][0];
-                    if(newX<0 || newX>=M || newY<0 || newY>=N ) continue;
-                    if(result[newX][newY]==0){
-                        result[x][y]=mini(result[x][y], result[newX][newY]+1);
-                    }
-                }
-            }
-        }
-    }
-
-    return 0;
-}
 
 
 
@@ -69,10 +66,10 @@ int main(){
     for(int i=0;i<N;i++){
         for(int j=0;j<M;j++){
             scanf("%1d", &value[i][j]);
-            if(value[i][j] == 1)
-                v.push_back({i,j});
         }
     }
+
+    printf("%d", bfs());
 
     return 0;
 }

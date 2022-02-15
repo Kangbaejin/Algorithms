@@ -6,6 +6,11 @@
  * https://www.acmicpc.net/problem/11726
  * 
  * 
+ * 
+ * i 번째의 경우는 , (i-1 번째에서 '|' 모양을 더한 경우) + (i-2 번째에서 '=' 모양을 더한 경우)
+ * 따라서 ary[i] = ary[i-1] + ary[i-2] 이다.
+ * 
+ * 
  */
 
 #include <iostream>

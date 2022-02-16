@@ -1,9 +1,9 @@
 /* 
- * baekjoon 11726
+ * baekjoon 11727
  * 
- * 2xn 타일링
+ * 2xn 타일링 2
  * 
- * https://www.acmicpc.net/problem/11726
+ * https://www.acmicpc.net/problem/11727
  * 
  * 
  * 

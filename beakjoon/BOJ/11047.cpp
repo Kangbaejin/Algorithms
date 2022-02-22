@@ -33,8 +33,7 @@ int main(){
     cout.tie(0);
 
     cin >> N >> K;
-    
-    int index = -1;
+
     int remain = K;
     int cnt = 0;
 

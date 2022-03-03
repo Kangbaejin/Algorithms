@@ -6,29 +6,31 @@
  * https://www.acmicpc.net/problem/1202
  * 
  * 
+ * 아래 링크를 참고했다.
+ * https://jaimemin.tistory.com/760
+ * 
+ * 보석의 무게와 가격을 우선순위 queue 로 정렬하여 문제를 해결하는 것이아니라,
+ * 
+ * 가방 무게와 보석 무게 순으로 정렬 한 뒤,
+ * 가방에 넣을 수 있는 보석의 가격을 우선순위 queue 에 넣어 가장 가격이 큰 보석들을
+ * 챙기는 방식으로 구현하여 해결할 수 있었다.
+ * 
  */
 
 #include <iostream>
 #include <queue>
 #include <vector>
 #include <algorithm>
+#define MAX 300000
 
 using namespace std;
 
-struct compare{
-    bool operator()(pair<int,int> a, pair<int,int> b){
-        if(a.second == b.second){
-            return a.first > b.first;
-        }
-        else{
-            return a.second < b.second;
-        }
-    }
-};
 
 
-priority_queue<pair<int,int>, vector<pair<int, int>>, compare> jewels;
+vector<pair<int,int>> jewels;
 vector<int> bags;
+priority_queue<int> pq;
+
 int N, K;
 
 int main(){
@@ -43,7 +45,7 @@ int main(){
     int mass, value;
     for(int i=0;i<N;i++){
         cin >> mass >> value;
-        jewels.push({mass,value});
+        jewels.push_back({mass,value});
     }
 
     int x;
@@ -53,27 +55,26 @@ int main(){
     }
 
     sort(bags.begin(),bags.end());
+    sort(jewels.begin(),jewels.end());  //보석 무게 기준 오름차순 정렬
 
-    while(!jewels.empty()){
-        int wrong_cnt=0;
-        pair<int,int> goal = jewels.top();
-        for(int i=0;i<K;i++){
-            if(bags[i]>=goal.first){
-                sum+=goal.second;
-                jewels.pop();
-                bags[i] = 0;
-                break;
-            }
-            else{
-                wrong_cnt++;
-            }
+
+    int index = 0;
+    for(int i=0;i<K;i++){
+        //i 번째 가방에 넣을 수 있는 보석의 가격을 pq 에 모두 담는다.
+        while(index<N && jewels[index].first<=bags[i]){
+            pq.push(jewels[index++].second);
         }
-        if(wrong_cnt==K){
-            jewels.pop();
+        //무게 제한이 적은 것 부터 체크했으므로,
+        //만약 무게가 적음에도 비싼 광석도 놓치지 않고 담을 수 있다.
+        if(!pq.empty()){
+            sum += pq.top();
+            pq.pop();
         }
     }
 
+
     cout << sum;
+
 
     return 0;
 

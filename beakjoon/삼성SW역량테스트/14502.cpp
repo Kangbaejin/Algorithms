@@ -25,9 +25,6 @@ queue<pair<int, int>> q;
 vector<pair<int,int>> v;
 int cnt = 0;
 
-
-
-
 int safe_size(void){
     cnt = 0;
     for(int i=0;i<N;i++){
@@ -41,18 +38,14 @@ int safe_size(void){
     return cnt;
 }
 
-void print_value(void){
-    cnt = 0;
+void virus_spread(void){
     for(int i=0;i<N;i++){
         for(int j=0;j<M;j++){
-            cout << value[i][j] << " ";
+            if(value[i][j]==2){
+                q.push({i,j});
+            }
         }
-        cout << "\n";
     }
-    return;
-}
-
-void virus_spread(void){
 	while(!q.empty()){
         int x = q.front().first;
         int y = q.front().second;
@@ -87,24 +80,19 @@ void solve(void){
             add3.push_back(0);
         }
     }
-
     do{
         for(int i=0;i<v.size();i++){
             int x = v[i].first;
             int y = v[i].second;
             value[x][y] = add3[i];
         }
-        //print_value();
-        //cout << "\n";
+        
         virus_spread();
-        //print_value();
+        
         int temp_size = safe_size();
         if(max_safe_size<temp_size){
             max_safe_size = temp_size;
-            print_value();
         }
-
-        //break;
 
     }while(prev_permutation(add3.begin(), add3.end()));
 
@@ -127,9 +115,6 @@ int main(){
         for(int j=0;j<M;j++){
             cin >> temp;
             value[i][j] = temp;
-            if(value[i][j]==2){
-                q.push({i,j});
-            }
             if(value[i][j]==0){
                 v.push_back({i,j});
             }

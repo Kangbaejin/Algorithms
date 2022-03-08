@@ -1,9 +1,9 @@
 /* 
- * baekjoon 1826
+ * baekjoon 14502
  * 
- * 연료 채우기
+ * 연구소
  * 
- * https://www.acmicpc.net/problem/1826
+ * https://www.acmicpc.net/problem/14502
  * 
  * 
  * 

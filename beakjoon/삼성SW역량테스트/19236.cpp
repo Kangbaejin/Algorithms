@@ -13,7 +13,17 @@
 
 using namespace std;
 
-int value[4][4][2] = {0,};
+struct fish{
+    int x;
+    int y;
+    //Dir : 1~8 방향을 나타내고 0이면 물고기가 죽은 것
+    int Dir;
+};
+
+
+int ans;
+int value[4][4];
+fish fish_list[16];
 
 int dir[8][2] = {{-1,0},{-1,-1},{0,-1},{1,-1},{1,0},{1,1},{0,1},{-1,1}};
 
@@ -50,9 +60,10 @@ void moving_fish(){
 int main(){
     for(int i=0;i<4;i++){
         for(int j=0;j<4;j++){
-            for(int k=0;k<2;k++){
-                cin >> value[i][j][k];
-            }
+            int a,b;
+            cin >> a >> b;
+            value[i][j] = a;
+            fish_list[a]={i,j,b};
         }
     }
 

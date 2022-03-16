@@ -25,6 +25,7 @@
  * 
  * 
  * 시계방향으로 90 도 돌리는 동작 = "y=x 대칭 이동, y=0 기준 대칭이동, 이후 평행이동"
+ * == rotate(3, vector)
  * 
  * 
  * 회전시킨 것의 끝점 -> 원래의 끝점과 같아져야함.
@@ -43,8 +44,6 @@ using namespace std;
 #include <iostream>
 #include <vector>
 
-//→ ↑ ← ↓
-int dir[4][2] = {{1,0},{0,-1},{-1,0},{0,1}};
 bool map[101][101];
 
 vector<vector<pair<int, int>>> gen;

@@ -6,27 +6,26 @@
  * https://www.acmicpc.net/problem/17837
  * 
  * 
- * 구현 계획
  * 
- * 1) 선택
+ * 주의점
+ * 1)
+ * 1턴안에서 말이 한번 움직일 때마다 체크하며 높이가 4가 넘었을 경우 턴을 반환.
+ * 왜냐하면, 1턴이 다 실행 된 뒤에 높이를 체크하게 된다면,
+ * 1턴 안에서 높이가 4가 넘었다가 이동하면서 다시 높이가 4 미만으로 변경되었을 수 도 있으므로,
+ * 매 움직임(말 하나 하나) 마다 체크를 해야한다.
  * 
- * 이동 함수
- *  흰색인 경우
- *  빨간색인 경우
- *  파란색인 경우
- * 
- * 1턴이 끝난 뒤 마다 체크 함수
+ * 2)
+ * 파란색으로 인해 방향이 바뀐 다음 블럭의 색을 고려하여 진행해야한다.
  * 
  * 
- * 2) 
- * 이동 함수
- *  흰색인 경우
- *  빨간색인 경우
- *  파란색인 경우
  * 
- * 현재 상태를 기록하는 배열에서
- * 이동함수가 실행 되었을 때, 높이가 4가 된다면 
- * 턴을 출력하고 return
+ * 
+ * 전체적인 구현 계획과 구현은 매우 비슷했으나, move 함수를 구현하는 과정이 훨씬 깔끔해서 보고 반영하게 되었다.
+ * 배열을 벗어나는 경우와, 파란색 이후 새로운 블럭을 처리함에 있어 재귀적인 함수를 이용하여 표현하면,
+ * 
+ * 내가 작성했던 if else 문의 지옥에서 벗어날 수 있었다.
+ * 
+ * https://yabmoons.tistory.com/304
  * 
  */
 
@@ -47,147 +46,100 @@ struct stone {
 //map[i][j] 위치의 말들을 기록하기위해 vector 생성
 
 vector<int> map[N_MAX][N_MAX];
+int map_check[N_MAX][N_MAX];
 stone list[K_MAX];
 // →, ←, ↑, ↓
-int dir[5][2] = {{0,0},{1,0},{-1,0},{0,-1},{0,1}};
+int Dir[5][2] = {{0,0},{0,1},{0,-1},{-1,0},{1,0}};
+
 int N,K;
 
 
-
+void Print(){
+    for (int i = 1; i <= N; i++){
+        for (int j = 1; j <= N; j++){
+            cout << map[i][j].size() << " ";
+        }
+        cout << endl;
+    }
+    cout << "#######################################################################" << endl;
+}
 
 bool checking(){
-    for(int i=1;i<=N;i++){
-        for(int j=1;j<=N;j++){
-            if(map[i][j].size()>=5)
-                return true;
-        }
+    for(int i=1;i<=K;i++){
+        int x = list[i].x;
+        int y = list[i].y;
+        if(map[x][y].size()>=4)  return true;
     }
-
     return false;
 }
 
-
-void moving(){
-    for(int i=1;i<K_MAX;i++){
-        int x = list[i].x;
-        int y = list[i].y;
-        int d = list[i].dir;
-        //x==0 이거나 y==0 인 경우 이상부터는 움직일 말이 없는 경우 이므로 이상일 경우 return
-        if(x==0 || y==0) break;
-
-        
-        int first_number = find(map[x][y].begin()+1, map[x][y].end(), i) - map[x][y].begin();
-        vector<int> move_list;
-        for(int k=first_number;k<map[x][y].size();k++){
-            move_list.push_back(map[x][y][k]);
+void moving(int x, int y, int nx, int ny, int Num, int pos, int state){
+    if(state == 0){
+        for(int i=pos;i<map[x][y].size();i++){
+            map[nx][ny].push_back(map[x][y][i]);
+            list[map[x][y][i]].x = nx;
+            list[map[x][y][i]].y = ny;
         }
-
-        //원래 x,y 위치에 있던 값 제거
-        int move_list_size = move_list.size();
-        while(move_list_size--){
+        int del_num = map[x][y].size()-pos;
+        while(del_num--){
             map[x][y].pop_back();
         }
-
-        //cout << "pop back done \n";
-
-        //움직일 수 없다면
-        //파란색인 경우와 똑같이 처리
-        int newx = x + dir[d][0];
-        int newy = y + dir[d][1];
-        if(newx < 1 || newx >N || newy < 1 || newy>N){
-            //새로운 방향이 배열 밖이었다면, 반대 방향은 무조건 배열 안쪽이다.
-
-            //d 방향 뒤집기
-            int r = d%2;
-            if(r==0) {
-                d = d-1;
-            }
-            else {
-                d = d+1;
-            }
-
-            newx = x + dir[d][0];
-            newy = y + dir[d][1];
-            //파란색과 똑같이 취급하여 움직이지 못하므로
-            if(map[newx][newy][0] == 2){
-                list[i].dir = d;
-                //원래 위치에 다시 입력
-                for(int j=0;j<move_list.size();j++){
-                    map[x][y].push_back(move_list[j]);
-                }
-            }
-            //파란색이 아니라면 새로운 위치에 move_list 값들을 입력
-            else{
-                for(int j=0;j<move_list.size();j++){
-                    list[move_list[j]].x = newx;
-                    list[move_list[j]].y = newy;
-                    map[newx][newy].push_back(move_list[j]);
-                }
-            }
+    }
+    else if(state == 1){
+        for(int i=map[x][y].size()-1;i>=pos;i--){
+            map[nx][ny].push_back(map[x][y][i]);
+            list[map[x][y][i]].x = nx;
+            list[map[x][y][i]].y = ny;
         }
-
-        //움직일 수 있다면
-        else{
-            //흰색인 경우
-            if(map[newx][newy][0]==0){
-                for(int j=0;j<move_list.size();j++){
-                    list[move_list[j]].x = newx;
-                    list[move_list[j]].y = newy;
-                    map[newx][newy].push_back(move_list[j]);
-                }
-            }
-            //빨간색인 경우
-            else if(map[newx][newy][0] == 1){
-                for(int j=move_list.size()-1;j>=0;j--){
-                    list[move_list[j]].x = newx;
-                    list[move_list[j]].y = newy;
-                    map[newx][newy].push_back(move_list[j]);
-                }
-            }
-            //파란색인 경우
-            else if(map[newx][newy][0] == 2){
-                int r = d%2;
-                if(r==0) {
-                    d = d-1;
-                }
-                else {
-                    d = d+1;
-                }
-                newx = x + dir[d][0];
-                newy = y + dir[d][1];
-                //새로운 방향이 파란색이거나 배열을 벗어나면 방향만 바꿔준다.
-                //move_list 로 옮겨놨던 값 다시 원래 x y 위치에 넣어준다.
-                if((map[newx][newy][0] == 2) || (newx < 1 || newx >N || newy < 1 || newy>N)){
-                    list[i].dir = d;
-                    for(int j=0;j<move_list.size();j++){
-                        map[x][y].push_back(move_list[j]);
-                    }
-                }
-                else{
-                    for(int j=0;j<move_list.size();j++){
-                        list[move_list[j]].x = newx;
-                        list[move_list[j]].y = newy;
-                        map[newx][newy].push_back(move_list[j]);
-                    }
-                }
-            }
+        int del_num = map[x][y].size()-pos;
+        while(del_num--){
+            map[x][y].pop_back();
         }
-        //cout << i <<"th cycle is done \n";
+    }
+    else if(state == 2){
+        int d = list[Num].dir;
+
+        if(d==1) d=2;
+        else if(d==2) d=1;
+        else if(d==3) d=4;
+        else d = 3;
+
+        list[Num].dir = d;
+        int nnx = x + Dir[d][0];
+        int nny = y + Dir[d][1];
+        if (nnx >= 1 && nny >= 1 && nnx <= N && nny <= N){
+            if (map_check[nnx][nny] != 2) moving(x, y, nnx, nny, Num, pos, map_check[nnx][nny]);
+        }
     }
 }
 
-
 void solve(){
+    bool flag = false;
     int cnt = 0;
     while(cnt <= 1000){
         cnt++;
-        moving();
-        if(checking()){
-            cout << cnt;
-            return;
+        for(int i=1; i<=K;i++){
+            int x = list[i].x;
+            int y = list[i].y;
+            int d = list[i].dir;
+
+            int nx = x + Dir[d][0];
+            int ny = y + Dir[d][1];
+
+            int pos = find(map[x][y].begin(), map[x][y].end(), i) - map[x][y].begin();
+            if(nx>=1 && ny>=1 && nx<=N && ny<=N) moving(x,y,nx,ny,i,pos,map_check[nx][ny]);
+            else moving(x,y,nx,ny,i,pos,2);
+
+            if(checking() == true){
+                flag = true;
+                break;
+            }
+
         }
+        if(flag == true) break;
     }
-    cout << -1;
+    if(flag == true) cout << cnt;
+    else cout << -1;
     return;
 }
 
@@ -198,26 +150,23 @@ void v_input(){
     for(int i=1;i<=N;i++){
         for(int j=1;j<=N;j++){
             cin >> temp;
-            map[i][j].push_back(temp);
+            map_check[i][j] = temp;
         }
     }
 
     for(int i=1; i<=K; i++){
         int ix, iy, id;
         cin >> ix >> iy >> id;
-        list[i].x = ix;
-        list[i].y = iy;
-        list[i].dir = id;
+        list[i] = {ix, iy, id};
 
         map[ix][iy].push_back(i);
     }
-
 }
 
 int main(){
-    // ios::sync_with_stdio(0);
-    // cin.tie(0); 
-    // cout.tie(0);
+    ios::sync_with_stdio(0);
+    cin.tie(0); 
+    cout.tie(0);
 
     v_input();
 

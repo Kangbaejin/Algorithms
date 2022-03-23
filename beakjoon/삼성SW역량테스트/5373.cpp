@@ -14,12 +14,19 @@
  * 0 1 2 3 4 5
  * w y r o g b
  * 
+ * 
+ * 
+ * print all 함수를 구현하여
+ * 
+ * 1
+ * 2
+ * U+ U- 를 모든 평면에 적용하여 오류를 찾아냈다.
+ * 
  */
 
 
 #include <iostream>
-#include <vector>
-#include <algorithm>
+#include <string>
 
 
 using namespace std;
@@ -32,7 +39,7 @@ char color[6] = {'w', 'y', 'r', 'o', 'g', 'b'};
 
 void initial(){
     for(int i=0;i<6;i++){
-        for(int j=0;i<9;j++){
+        for(int j=0;j<9;j++){
             all[i][j] = color[i];
         }
     }
@@ -59,10 +66,7 @@ void get_one_col(int p, int col, char *a, char *b, char *c){
 // 1 1 4                2 2 1
 // 2 X 4  clock wise -> 3 X 1
 // 2 3 3                3 4 4
-//
-// 1 1 4                        4 4 3
-// 2 X 4  counter clock wise -> 1 X 3
-// 2 3 3                        1 2 2
+
 void rot_one_plane(int p, char dir){
     if(dir == '+'){
         char one[2] = {all[p][0], all[p][1]};
@@ -81,7 +85,129 @@ void rot_one_plane(int p, char dir){
         //4 위치에 저장했던 1 입력
         all[p][5] = one[1];
         all[p][2] = one[0];
+
+        if(p==0){
+            char temp[3]={all[2][0], all[2][1], all[2][2]};
+            all[2][0] = all[5][0];
+            all[2][1] = all[5][1];
+            all[2][2] = all[5][2];
+
+            all[5][0] = all[3][0];
+            all[5][1] = all[3][1];
+            all[5][2] = all[3][2];
+
+            all[3][0] = all[4][0];
+            all[3][1] = all[4][1];
+            all[3][2] = all[4][2];
+
+            all[4][0] = temp[0];
+            all[4][1] = temp[1];
+            all[4][2] = temp[2];
+        }
+        else if(p==1){
+            char temp[3]={all[2][6], all[2][7], all[2][8]};
+            all[2][6] = all[4][6];
+            all[2][7] = all[4][7];
+            all[2][8] = all[4][8];
+
+            all[4][6] = all[3][6];
+            all[4][7] = all[3][7];
+            all[4][8] = all[3][8];
+
+            all[3][6] = all[5][6];
+            all[3][7] = all[5][7];
+            all[3][8] = all[5][8];
+
+            all[5][6] = temp[0];
+            all[5][7] = temp[1];
+            all[5][8] = temp[2];
+
+        }
+        else if(p==2){
+            char temp[3]={all[0][6], all[0][7], all[0][8]};
+            all[0][8] = all[4][2];
+            all[0][7] = all[4][5];
+            all[0][6] = all[4][8];
+
+            all[4][2] = all[1][0];
+            all[4][5] = all[1][1];
+            all[4][8] = all[1][2];
+
+            all[1][0] = all[5][6];
+            all[1][1] = all[5][3];
+            all[1][2] = all[5][0];
+
+            all[5][0] = temp[0];
+            all[5][3] = temp[1];
+            all[5][6] = temp[2];
+        }
+        else if(p==3){
+            char temp[3]={all[0][0], all[0][1], all[0][2]};
+            
+            all[0][0] = all[5][2];
+            all[0][1] = all[5][5];
+            all[0][2] = all[5][8];
+
+            all[5][2] = all[1][8];
+            all[5][5] = all[1][7];
+            all[5][8] = all[1][6];
+
+            all[1][6] = all[4][0];
+            all[1][7] = all[4][3];
+            all[1][8] = all[4][6];
+
+            all[4][0] = temp[2];
+            all[4][3] = temp[1];
+            all[4][6] = temp[0];
+            
+        }
+        else if(p==4){
+            char temp[3]={all[0][0], all[0][3], all[0][6]};
+            
+            all[0][6] = all[3][2];
+            all[0][3] = all[3][5];
+            all[0][0] = all[3][8];
+
+            all[3][2] = all[1][6];
+            all[3][5] = all[1][3];
+            all[3][8] = all[1][0];
+
+            all[1][0] = all[2][0];
+            all[1][3] = all[2][3];
+            all[1][6] = all[2][6];
+
+            all[2][0] = temp[0];
+            all[2][3] = temp[1];
+            all[2][6] = temp[2];
+        }
+        else if(p==5){
+            char temp[3]={all[0][2], all[0][5], all[0][8]};
+            
+            all[0][2] = all[2][2];
+            all[0][5] = all[2][5];
+            all[0][8] = all[2][8];
+
+            all[2][2] = all[1][2];
+            all[2][5] = all[1][5];
+            all[2][8] = all[1][8];
+
+            all[1][2] = all[3][6];
+            all[1][5] = all[3][3];
+            all[1][8] = all[3][0];
+
+            all[3][0] = temp[2];
+            all[3][3] = temp[1];
+            all[3][6] = temp[0];
+        }
+
     }
+// 0 1 2
+// 3 4 5
+// 6 7 8
+
+// 1 1 4                        4 4 3
+// 2 X 4  counter clock wise -> 1 X 3
+// 2 3 3                        1 2 2
     else{
         char one[2] = {all[p][0], all[p][1]};
         //1 위치에 4 입력
@@ -99,6 +225,121 @@ void rot_one_plane(int p, char dir){
         //2 위치에 저장했던 1 입력
         all[p][3] = one[1];
         all[p][6] = one[0];
+
+
+        if(p==0){
+            char temp[3]={all[2][0], all[2][1], all[2][2]};
+            all[2][0] = all[4][0];
+            all[2][1] = all[4][1];
+            all[2][2] = all[4][2];
+
+            all[4][0] = all[3][0];
+            all[4][1] = all[3][1];
+            all[4][2] = all[3][2];
+
+            all[3][0] = all[5][0];
+            all[3][1] = all[5][1];
+            all[3][2] = all[5][2];
+
+            all[5][0] = temp[0];
+            all[5][1] = temp[1];
+            all[5][2] = temp[2];
+        }
+        else if(p==1){
+            char temp[3]={all[2][6], all[2][7], all[2][8]};
+            all[2][6] = all[5][6];
+            all[2][7] = all[5][7];
+            all[2][8] = all[5][8];
+
+            all[5][6] = all[3][6];
+            all[5][7] = all[3][7];
+            all[5][8] = all[3][8];
+
+            all[3][6] = all[4][6];
+            all[3][7] = all[4][7];
+            all[3][8] = all[4][8];
+
+            all[4][6] = temp[0];
+            all[4][7] = temp[1];
+            all[4][8] = temp[2];
+
+        }
+        else if(p==2){
+            char temp[3]={all[0][6], all[0][7], all[0][8]};
+            all[0][6] = all[5][0];
+            all[0][7] = all[5][3];
+            all[0][8] = all[5][6];
+
+            all[5][0] = all[1][2];
+            all[5][3] = all[1][1];
+            all[5][6] = all[1][0];
+
+            all[1][0] = all[4][2];
+            all[1][1] = all[4][5];
+            all[1][2] = all[4][8];
+
+            all[4][2] = temp[2];
+            all[4][5] = temp[1];
+            all[4][8] = temp[0];
+        }
+        else if(p==3){
+            char temp[3]={all[0][0], all[0][1], all[0][2]};
+            
+            all[0][0] = all[4][6];
+            all[0][1] = all[4][3];
+            all[0][2] = all[4][0];
+
+            all[4][0] = all[1][6];
+            all[4][3] = all[1][7];
+            all[4][6] = all[1][8];
+
+            all[1][6] = all[5][8];
+            all[1][7] = all[5][5];
+            all[1][8] = all[5][2];
+
+            all[5][2] = temp[0];
+            all[5][5] = temp[1];
+            all[5][8] = temp[2];
+            
+        }
+        else if(p==4){
+            char temp[3]={all[0][0], all[0][3], all[0][6]};
+            
+            all[0][0] = all[2][0];
+            all[0][3] = all[2][3];
+            all[0][6] = all[2][6];
+
+            all[2][0] = all[1][0];
+            all[2][3] = all[1][3];
+            all[2][6] = all[1][6];
+
+            all[1][0] = all[3][8];
+            all[1][3] = all[3][5];
+            all[1][6] = all[3][2];
+
+            all[3][2] = temp[2];
+            all[3][5] = temp[1];
+            all[3][8] = temp[0];
+        }
+        else if(p==5){
+            char temp[3]={all[0][2], all[0][5], all[0][8]};
+            
+            all[0][2] = all[3][6];
+            all[0][5] = all[3][3];
+            all[0][8] = all[3][0];
+
+            all[3][0] = all[1][8];
+            all[3][3] = all[1][5];
+            all[3][6] = all[1][2];
+
+            all[1][2] = all[2][2];
+            all[1][5] = all[2][5];
+            all[1][8] = all[2][8];
+
+            all[2][2] = temp[0];
+            all[2][5] = temp[1];
+            all[2][8] = temp[2];
+        }
     }
 }
 
@@ -114,8 +355,6 @@ void action(char char_p, char dir){
     }
 
     rot_one_plane(p, dir);
-    //평면에 딸린 옆면들 돌리는 코드
-    //추가 작성 해야한다.
 
 }
 
@@ -129,14 +368,45 @@ void print_top(){
     }
 }
 
+void print_all(){
+    for(int i=1;i<=9;i++){
+        cout << all[0][i-1];
+        if(i%3 == 0) cout << "\n";
+    }
+
+    for(int i=1;i<=9;i++){
+        cout << all[1][i-1];
+        if(i%3 == 0) cout << "\n";
+    }
+
+    for(int i=1;i<=9;i++){
+        cout << all[2][i-1];
+        if(i%3 == 0) cout << "\n";
+    }
+
+    for(int i=1;i<=9;i++){
+        cout << all[3][i-1];
+        if(i%3 == 0) cout << "\n";
+    }
+
+    for(int i=1;i<=9;i++){
+        cout << all[4][i-1];
+        if(i%3 == 0) cout << "\n";
+    }
+
+    for(int i=1;i<=9;i++){
+        cout << all[5][i-1];
+        if(i%3 == 0) cout << "\n";
+    }
+}
+
 
 void solve(){
-    initial();
-
     int N;
     cin >> N;
 
     for(int i=0;i<N;i++){
+        initial();
         int M;
         cin >> M;
         string temp;
@@ -150,6 +420,10 @@ void solve(){
 
 
 int main(){
+    ios::sync_with_stdio(false);
+	cin.tie(0);
+	cout.tie(0);
+
     solve();
     return 0;
 }

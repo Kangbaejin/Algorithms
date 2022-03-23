@@ -45,20 +45,6 @@ void initial(){
     }
 }
 
-//p = 0~5, row = 0~2
-void get_one_row(int p, int row, char *a, char *b, char *c){
-    *a = all[p][row*3];
-    *b = all[p][row*3+1];
-    *c = all[p][row*3+2];
-}
-//p = 0~5, col = 0~2
-void get_one_col(int p, int col, char *a, char *b, char *c){
-    *a = all[p][col];
-    *b = all[p][col+3];
-    *c = all[p][col+6];
-}
-
-
 // 0 1 2
 // 3 4 5
 // 6 7 8
@@ -66,7 +52,6 @@ void get_one_col(int p, int col, char *a, char *b, char *c){
 // 1 1 4                2 2 1
 // 2 X 4  clock wise -> 3 X 1
 // 2 3 3                3 4 4
-
 void rot_one_plane(int p, char dir){
     if(dir == '+'){
         char one[2] = {all[p][0], all[p][1]};

@@ -6,7 +6,13 @@
  * https://www.acmicpc.net/problem/16236
  * 
  * 
- * 구현 계획
+ * 
+ * 
+ * 최단 거리를 구하는 것 역시 BFS 를 이용하여 구현해야 했다.
+ * 
+ * 최단 거리를 구하는 BFS에 대해 잘 정리되어 있는 글
+ * https://ansohxxn.github.io/programmers/114/
+ * 
  * 
  */
 

@@ -25,9 +25,6 @@
 #define abs(a) ((a>0) ?  (a) : -(a))
 using namespace std;
 
-
-
-
 struct shark{
     int size;
     int fishes_count;
@@ -35,12 +32,14 @@ struct shark{
     int y;
 };
 
+//point_and_distance
+struct pad{
+    int x, y, distance;
+};
 
 int map[max_size][max_size];
 int N, ans;
 shark shk;
-
-
 
 
 void Input(){
@@ -57,11 +56,6 @@ void Input(){
         }
     }
 }
-
-//point_and_distance
-struct pad{
-    int x, y, distance;
-};
 
 
 struct cmp {
@@ -110,7 +104,6 @@ int short_path(int start_x, int start_y, int end_x, int end_y){
     if(!visited[end_x][end_y]) return -1;
     else return dist[end_x][end_y];
 }
-
 
 
 void BFS(int x, int y){

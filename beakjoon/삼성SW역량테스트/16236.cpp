@@ -165,11 +165,7 @@ void BFS(int x, int y){
 
 int main(){
     Input();
-
     BFS(shk.x, shk.y);
-
     cout << ans;
-
-
     return 0;
 }

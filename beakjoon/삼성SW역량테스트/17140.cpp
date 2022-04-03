@@ -29,9 +29,10 @@ int map[max_map][max_map];
 int r,c,k;
 int find_r, find_c;
 
-//내림차순 (큰 것부터 작은 것의 순서대로 정렬)
+//오름차순 
 bool compare(pair<int,int> a, pair<int,int> b){
-    return a.first > b.first;
+    if(a.second == b.second) return a.first < b.first;
+    else return a.second < b.second;
 }
 
 void print_map(){
@@ -44,14 +45,15 @@ void print_map(){
 }
 
 
-void R_op(){    
+void R_op(){
+    int max_length=-1;
     //각 row 마다 아래의 과정을 수행한다.
     for(int i=1;i<=r;i++){
         //새로 추가될 배열을 만드는 과정
         vector<pair<int, int>> v;
         for(int j=1;j<=c;j++){
             if(map[i][j]==0) continue;
-            int temp_idx = 0;
+            int temp_idx = -1;
             for(int k=0;k<v.size();k++){
                 if(v[k].first==map[i][j]) {
                     temp_idx = k;
@@ -59,7 +61,7 @@ void R_op(){
                 }
             }
             //새로운 원소인 경우
-            if(temp_idx == 0){
+            if(temp_idx == -1){
                 v.push_back({map[i][j],1});
             }
             //기존에 있는 원소의 경우, second(등장 횟수) 의 값을 증가시킨다.
@@ -68,30 +70,32 @@ void R_op(){
             }
         }
 
-        //해당 벡터를 v.first 를 기준으로 sort 한다.
+        //해당 벡터를 v.second 를 기준으로 sort 한다.
         sort(v.begin(),v.end(), compare);
 
         //추가된 새로운 배열을 입력한다.
         int max_size = v.size() > 50 ? 50 : v.size();
         for(int j=1;j<=max_size*2;j+=2){
-            map[i][j] = v[j-1].first;
-            map[i][j+1] = v[j-1].second;
+            map[i][j] = v[j/2].first;
+            map[i][j+1] = v[j/2].second;
         }
 
-        c = max_size*2;
+        if(max_length<max_size) max_length = max_size;
     }
 
+    c = max_length*2;
     print_map();
 }
 
 void C_op(){
+    int max_length=-1;
     //각 col 마다 아래의 과정을 수행한다.
-    for(int j=1;j<=c;j++){
+    for(int j=1;j<=r;j++){
         //새로 추가될 배열을 만드는 과정
         vector<pair<int, int>> v;
-        for(int i=1;i<=r;i++){
+        for(int i=1;i<=c;i++){
             if(map[i][j]==0) continue;
-            int temp_idx = 0;
+            int temp_idx = -1;
             for(int k=0;k<v.size();k++){
                 if(v[k].first==map[i][j]) {
                     temp_idx = k;
@@ -99,7 +103,7 @@ void C_op(){
                 }
             }
             //새로운 원소인 경우
-            if(temp_idx == 0){
+            if(temp_idx == -1){
                 v.push_back({map[i][j],1});
             }
             //기존에 있는 원소의 경우, second(등장 횟수) 의 값을 증가시킨다.
@@ -107,20 +111,21 @@ void C_op(){
                 v[temp_idx].second++;
             }
         }
-        //해당 벡터를 v.first 를 기준으로 sort 한다.
-        sort(v.begin(),v.end(), compare);
 
+        //해당 벡터를 v.second 를 기준으로 sort 한다.
+        sort(v.begin(),v.end(), compare);
 
         //추가된 새로운 배열을 입력한다.
         int max_size = v.size() > 50 ? 50 : v.size();
         for(int i=1;i<=max_size*2;i+=2){
-            map[i][j] = v[j-1].first;
-            map[i+1][j] = v[j-1].second;
+            map[i][j] = v[i/2].first;
+            map[i+1][j] = v[i/2].second;
         }
 
-        r = max_size*2;
+        if(max_length<max_size) max_length = max_size;
     }
 
+    r = max_length*2;
     print_map();
 }
 

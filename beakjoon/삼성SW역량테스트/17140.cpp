@@ -16,6 +16,11 @@
  * 아마 input 의 사이즈가 100 이하라 시간초과가 날 것 같지는 않다.
  * 
  * 
+ * 현재 r_op 의 333 경우 -> 3 3 이 나와야하는데 결과는 3 3 3 이 입력된다. 해당 연산이 잘 이루어지지 않고 있다.
+ * vector v 에 넣는 것은 잘 들어 가는 것 같은데,
+ * map 에 넣는 과정에서 오류가 있는 것 같다.
+ * 
+ * 
  */
 
 #include <iostream>
@@ -46,6 +51,7 @@ void print_map(){
 
 
 void R_op(){
+    cout << "r_op\n";
     int max_length=-1;
     //각 row 마다 아래의 과정을 수행한다.
     for(int i=1;i<=r;i++){
@@ -72,12 +78,15 @@ void R_op(){
 
         //해당 벡터를 v.second 를 기준으로 sort 한다.
         sort(v.begin(),v.end(), compare);
-
+        for(int j=0;j<v.size();j++){
+            cout << v[j].first << " " << v[j].second << ' ';
+        }
+        cout << "\n";
         //추가된 새로운 배열을 입력한다.
         int max_size = v.size() > 50 ? 50 : v.size();
-        for(int j=1;j<=max_size*2;j+=2){
-            map[i][j] = v[j/2].first;
-            map[i][j+1] = v[j/2].second;
+        for(int j=1;j<max_size*2;j+=2){
+            map[i][j] = v[(j-1)/2].first;
+            map[i][j+1] = v[(j-1)/2].second;
         }
 
         if(max_length<max_size) max_length = max_size;
@@ -85,9 +94,11 @@ void R_op(){
 
     c = max_length*2;
     print_map();
+    cout << "\n";
 }
 
 void C_op(){
+    cout << "c_op\n";
     int max_length=-1;
     //각 col 마다 아래의 과정을 수행한다.
     for(int j=1;j<=r;j++){
@@ -117,9 +128,9 @@ void C_op(){
 
         //추가된 새로운 배열을 입력한다.
         int max_size = v.size() > 50 ? 50 : v.size();
-        for(int i=1;i<=max_size*2;i+=2){
-            map[i][j] = v[i/2].first;
-            map[i+1][j] = v[i/2].second;
+        for(int i=1;i<max_size*2;i+=2){
+            map[i][j] = v[(i-1)/2].first;
+            map[i+1][j] = v[(i-1)/2].second;
         }
 
         if(max_length<max_size) max_length = max_size;
@@ -127,6 +138,7 @@ void C_op(){
 
     r = max_length*2;
     print_map();
+    cout << "\n";
 }
 
 

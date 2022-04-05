@@ -20,7 +20,8 @@
  * vector v 에 넣는 것은 잘 들어 가는 것 같은데,
  * map 에 넣는 과정에서 오류가 있는 것 같다.
  * 
- * 
+ * 넣기 전에 이전의 배열을 초기화 하는 과정이 필요했다!
+ * 이전에 3 3 3 이 입력된 뒤 초기화 되지 않아 앞의 3 3 이 입력되었지만 이전에 입력되어 있던 3이 남아서 출력된 것이다.
  */
 
 #include <iostream>
@@ -51,37 +52,24 @@ void print_map(){
 
 
 void R_op(){
-    cout << "r_op\n";
     int max_length=-1;
     //각 row 마다 아래의 과정을 수행한다.
     for(int i=1;i<=r;i++){
         //새로 추가될 배열을 만드는 과정
         vector<pair<int, int>> v;
-        for(int j=1;j<=c;j++){
-            if(map[i][j]==0) continue;
-            int temp_idx = -1;
-            for(int k=0;k<v.size();k++){
-                if(v[k].first==map[i][j]) {
-                    temp_idx = k;
-                    break;
-                }
-            }
-            //새로운 원소인 경우
-            if(temp_idx == -1){
-                v.push_back({map[i][j],1});
-            }
-            //기존에 있는 원소의 경우, second(등장 횟수) 의 값을 증가시킨다.
-            else{
-                v[temp_idx].second++;
-            }
+        int check_ary[max_map] = {0,};
+        for(int j=1;j<=c;j++) check_ary[map[i][j]]++;
+        for(int j=1;j<max_map;j++){
+            if(check_ary[j] == 0)   continue;
+            v.push_back({j,check_ary[j]});
         }
+
 
         //해당 벡터를 v.second 를 기준으로 sort 한다.
         sort(v.begin(),v.end(), compare);
-        for(int j=0;j<v.size();j++){
-            cout << v[j].first << " " << v[j].second << ' ';
-        }
-        cout << "\n";
+        //새로운 배열 입력 전에 이전의 배열을 0으로 초기화한다.
+        for(int j=1;j<=c;j++) map[i][j]=0;
+
         //추가된 새로운 배열을 입력한다.
         int max_size = v.size() > 50 ? 50 : v.size();
         for(int j=1;j<max_size*2;j+=2){
@@ -93,39 +81,28 @@ void R_op(){
     }
 
     c = max_length*2;
-    print_map();
-    cout << "\n";
 }
 
 void C_op(){
-    cout << "c_op\n";
     int max_length=-1;
-    //각 col 마다 아래의 과정을 수행한다.
-    for(int j=1;j<=r;j++){
+    //각 row 마다 아래의 과정을 수행한다.
+    for(int j=1;j<=c;j++){
         //새로 추가될 배열을 만드는 과정
         vector<pair<int, int>> v;
-        for(int i=1;i<=c;i++){
-            if(map[i][j]==0) continue;
-            int temp_idx = -1;
-            for(int k=0;k<v.size();k++){
-                if(v[k].first==map[i][j]) {
-                    temp_idx = k;
-                    break;
-                }
-            }
-            //새로운 원소인 경우
-            if(temp_idx == -1){
-                v.push_back({map[i][j],1});
-            }
-            //기존에 있는 원소의 경우, second(등장 횟수) 의 값을 증가시킨다.
-            else{
-                v[temp_idx].second++;
-            }
+        int check_ary[max_map] = {0,};
+        for(int i=1;i<=r;i++) check_ary[map[i][j]]++;
+        for(int i=1;i<max_map;i++){
+            if(check_ary[i] == 0)   continue;
+            v.push_back({i,check_ary[i]});
         }
+
 
         //해당 벡터를 v.second 를 기준으로 sort 한다.
         sort(v.begin(),v.end(), compare);
 
+        //새로운 배열 입력 전에 이전의 배열을 0으로 초기화한다.
+        for(int i=1;i<=r;i++) map[i][j]=0;
+        
         //추가된 새로운 배열을 입력한다.
         int max_size = v.size() > 50 ? 50 : v.size();
         for(int i=1;i<max_size*2;i+=2){
@@ -137,8 +114,6 @@ void C_op(){
     }
 
     r = max_length*2;
-    print_map();
-    cout << "\n";
 }
 
 
@@ -163,7 +138,7 @@ void Input(){
 
 void solve(){
     int cnt = 0;
-    while(cnt < 100){
+    while(cnt <= 100){
         if(check()){
             cout << cnt;
             return;
@@ -173,7 +148,7 @@ void solve(){
         cnt++;
 
     }
-    if(cnt == 100) cout << -1;
+    if(cnt > 100) cout << -1;
     return;
 }
 

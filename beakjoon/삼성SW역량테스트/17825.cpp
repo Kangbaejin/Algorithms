@@ -28,24 +28,28 @@
  */
 
 #include <iostream>
+#include <cstring>
+#include <vector>
 
 using namespace std;
 
-int ans;
+int ans=-1;
 
 int way_10[] = {10,13,16,19,25,30,35,40};
 int way_20[] = {22,24,25,30,35,40};
 int way_30[] = {28,27,26,25,30,35,40};
 
 int dice[10];
-int stones[4] = {0,0,0,0};
+
 
 void Input(){
     for(int i=0;i<10;i++)   cin >> dice[i];
 }
 
-
-int moving(int *a, int dice_number){
+//수행 불가 -> -2,  이동을 마칠 위치가 도착점 -> -1, 그렇지 않으면 해당 위치 return
+int moving(int *a, int dice_number, int * stones){
+    //이미 도착 지점에 있는 경우 return
+    if(*a == -1) return -2;
     //이미 안쪽 경로에 있는 경우 체크
     int flag = 0;
     int idx = 0;
@@ -74,7 +78,7 @@ int moving(int *a, int dice_number){
     int newidx = idx + dice_number;
     //이미 안쪽에 있는 경우
     if(flag==1){
-        if(newidx >= 8) newa=-1;
+        if(newidx >= 8) newa = -1;
         else newa = way_10[newidx];
     }
     if(flag==2){
@@ -92,7 +96,7 @@ int moving(int *a, int dice_number){
         if(newa > 40) newa = -1;
     }
 
-    //이동하는 칸에 이미 말이 있는지 체크
+    //이동을 마치는 칸에 이미 말이 있는지 체크
     int flag2 =0;
     for(int i=0;i<4;i++){
         if(stones[i]==newa){
@@ -104,20 +108,60 @@ int moving(int *a, int dice_number){
         }
     }
     //이동하는 칸에 이미 말이 없는 경우 위치 업데이트
-    if(flag2==0) *a = newa;
-
+    if(flag2==0){
+        *a = newa;
+    }
+    //이미 말이 있어서 이동할 수 없는 경우
+    else{
+        newa = -2;
+    }
     return newa;
 }
 
 
 
+int init_stone[4] = {0,0,0,0};
 
+void solve(int *stones, int sum, int depth, vector<int> v){
+    if(depth == 10){
+        if(ans < sum) {
+            ans = sum;
+            for(int i=0;i<10;i++) cout << v[i] << ' ';
+            cout << '\n';
+        }
+        
+        return;
+    }
 
-int solve(){
+    // for(int i=0;i<4;i++){
+    //     cout << stones[i] << " ";
+    // }
+    // cout << '\n';
 
+    int newstone[4];
+    for(int i=0;i<4;i++){
+        memcpy(newstone, stones, sizeof(int)*4);
+        int val = moving(&newstone[i],dice[depth],newstone);
+        if(val == -1) val = 0;
+        //이미 도착칸에 있는 말을 움직이려 했거나,
+        //이동을 마치는 칸에 다른 말이 있는 경우
+        if(val == -2){
+            continue;
+        }
+        else{
+            vector<int> newv(v);
+            newv.push_back(i);
+            solve(newstone, sum+val, depth+1, newv);
+        }
+    }
+
+    return;
 }
 
 int main(){
     Input();
+    vector<int> init_v;
+    solve(init_stone, 0, 0, init_v);
+    cout << '\n' << ans;
     return 0;
 }

@@ -35,7 +35,6 @@ using namespace std;
 
 int map[max_rc][max_rc];
 int zone[max_rc][max_rc];
-int popular[5];
 int ans = -1;
 int N;
 

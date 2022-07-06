@@ -8,7 +8,6 @@
  * 
  */
 
-
 #include <iostream>
 #include <queue>
 #include <vector>
@@ -153,12 +152,9 @@ int move_people(){
     return 0;
 }
 
-
-
-
 int ans=0;
-void solve(){
 
+void solve(){
     while(ans<2000){
         //각 연합을 만들고 체크하고
         //인구이동을 시키는 함수

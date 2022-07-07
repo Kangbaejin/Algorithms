@@ -22,17 +22,6 @@ int N,M,K;
 int map[10][10];
 int S2D2[10][10];
 
-void print_map(){
-    for (int i=0; i<N; i++){
-        for (int j=0; j<N; j++){
-            cout << map[i][j] << " ";
-        }
-        cout <<"\n";
-    }
-}
-
-
-
 
 void Input(){
     cin >> N >> M >> K;
@@ -140,10 +129,6 @@ void winter(){
         }
     }
 }
-
-/*
- * 1년을 보내는 함수
- */
 
 void one_year(){
     spring();

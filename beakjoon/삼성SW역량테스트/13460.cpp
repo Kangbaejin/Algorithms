@@ -34,7 +34,7 @@ int dx[] = {0,1,0,-1};
 int dy[] = {1,0,-1,0};
 
 //새로운 위치가 벽이 아니고, 현재 구멍의 위치가 아니라면, 이동을 진행한다.
-//이때 c 라는 변수를 통해 이동 거리를 기록한다.
+//c에 이동 거리를 기록한다.
 void move(int& x, int& y, int& c, int& i){
 	while(board[x+dx[i]][y+dy[i]] != '#' && board[x][y] != 'O'){
 		x += dx[i];
@@ -62,8 +62,9 @@ void bfs(){
 			move(nrx, nry, rc, i);
 			move(nbx, nby, bc, i);
 			
-            //파란 공이 이미 구멍에 들어간 경우, 탐색을 멈춘다.
+            //파란 공이 이미 구멍에 들어간 경우 다음으로 넘어간다.
 			if(board[nbx][nby] == 'O') continue;
+            //빨간 공이 구멍에 들어간 경우 탐색을 종료하며, 기울인 횟수를 출력한다.
 			if(board[nrx][nry] == 'O'){
 				cout<<nd;
 				return;

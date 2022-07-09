@@ -36,7 +36,6 @@ void Input(){
 //합쳐서 다시 줄어든걸 그 행이든 열에 채워줘야한다.
 
 //0, 1, 2, 3 순서로 시계방향으로 설정하였다. 0이 12시 방향을 나타낸다.
-int dir[4][2] = {{-1,0},{0,1},{1,0},{0,-1}};
 void move(int direction){
     queue<int> q;
     if(direction==0){

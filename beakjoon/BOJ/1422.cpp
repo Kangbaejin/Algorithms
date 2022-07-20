@@ -1,9 +1,9 @@
 /* 
- * baekjoon 1826
+ * baekjoon 1422
  * 
- * 연료 채우기
+ * 숫자의 신
  * 
- * https://www.acmicpc.net/problem/1826
+ * https://www.acmicpc.net/problem/1422
  * 
  * 
  * 

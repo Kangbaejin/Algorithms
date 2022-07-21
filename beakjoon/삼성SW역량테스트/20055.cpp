@@ -58,7 +58,7 @@ void solve(){
             }
         }
 
-        if(c_belt[0].durability>0 && !c_belt[0].is_full){
+        if(c_belt[0].durability>0){
             c_belt[0].durability--;
             c_belt[0].is_full=true;
         }

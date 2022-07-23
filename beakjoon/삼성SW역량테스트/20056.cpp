@@ -107,7 +107,7 @@ void sum_divide(){
     }    
 }
 
-void sovle(){
+void solve(){
     while(K--){
         move();
         sum_divide();
@@ -128,6 +128,6 @@ void sovle(){
 
 int main(){
     Input();
-    sovle();
+    solve();
     return 0;
 }
